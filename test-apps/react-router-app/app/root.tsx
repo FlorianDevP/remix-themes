@@ -10,12 +10,15 @@ import {
 import {
   PreventFlashOnWrongTheme,
   ThemeProvider,
+  useClientTheme,
   useTheme,
 } from "remix-themes";
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import { unsafeCookie } from "./cookie";
 import { themeSessionResolver } from "./sessions.server";
+import { ThemeSwitcher } from "./components/theme-switcher";
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -47,6 +50,7 @@ function LayoutWithoutProvider({
         <Links />
       </head>
       <body>
+        <ThemeSwitcher />
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -57,10 +61,11 @@ function LayoutWithoutProvider({
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const data = useRouteLoaderData<typeof loader>("root");
+  const theme = useClientTheme(unsafeCookie.name, data?.theme);
 
   return (
     <ThemeProvider
-      specifiedTheme={data ? data.theme : null}
+      specifiedTheme={theme}
       themeAction="/action/set-theme"
       disableTransitionOnThemeChange={true}
     >

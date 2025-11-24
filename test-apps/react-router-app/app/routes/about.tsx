@@ -15,7 +15,10 @@ export default function About() {
           Toggle theme
         </button>
       </div>
-      <a href="/">Home</a>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <a href="/">Home</a>
+        <a href="/broken-route">Broken Route</a>
+      </div>
     </div>
   );
 }
