@@ -26,7 +26,9 @@ function withoutTransition(callback: () => void) {
 
 export function useCorrectCssTransition({
   disableTransitions = false,
-}: { disableTransitions?: boolean } = {}) {
+}: {
+  disableTransitions?: boolean;
+} = {}) {
   return useCallback(
     (callback: () => void) => {
       if (disableTransitions) {

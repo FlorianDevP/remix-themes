@@ -1,5 +1,5 @@
 import type { SessionStorage } from "react-router";
-import type { Theme } from "./theme-provider";
+import type { Theme } from "./theme";
 import { isTheme } from "./theme-provider";
 
 type ThemeSession = {

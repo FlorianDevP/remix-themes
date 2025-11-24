@@ -6,10 +6,10 @@ export {
   ThemeProvider,
   useTheme,
   themes,
-  Theme,
   isTheme,
   PreventFlashOnWrongTheme,
 } from "./theme-provider";
+export { Theme } from "./theme";
 export { createThemeAction } from "./create-theme-action";
 
 export type { ThemeMetadata } from "./theme-provider";

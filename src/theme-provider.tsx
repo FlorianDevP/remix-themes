@@ -9,12 +9,8 @@ import {
 } from "react";
 import { useBroadcastChannel } from "./useBroadcastChannel";
 import { useCorrectCssTransition } from "./useCorrectCssTransition";
-import {useFetcher} from "react-router";
-
-export enum Theme {
-  DARK = "dark",
-  LIGHT = "light",
-}
+import { useFetcher } from "react-router";
+import { Theme } from "./theme";
 
 export const themes: Array<Theme> = Object.values(Theme);
 
@@ -115,7 +111,10 @@ export function ThemeProvider({
           broadcastThemeChange({ theme: preferredTheme, definedBy: "SYSTEM" });
         });
 
-        fetcher.submit({theme: null}, {method: 'POST', action: themeAction, encType: 'application/json'});
+        fetcher.submit(
+          { theme: null },
+          { method: "POST", action: themeAction, encType: "application/json" },
+        );
       } else {
         ensureCorrectTransition(() => {
           setTheme(nextTheme);
@@ -123,7 +122,10 @@ export function ThemeProvider({
         });
         broadcastThemeChange({ theme: nextTheme, definedBy: "USER" });
 
-        fetcher.submit({theme: nextTheme}, {method: 'POST', action: themeAction, encType: 'application/json'});
+        fetcher.submit(
+          { theme: nextTheme },
+          { method: "POST", action: themeAction, encType: "application/json" },
+        );
       }
     },
     [broadcastThemeChange, ensureCorrectTransition, theme, themeAction],
@@ -144,7 +146,7 @@ const clientThemeCode = String.raw`
   const theme = window.matchMedia(${JSON.stringify(prefersLightMQ)}).matches
     ? 'light'
     : 'dark';
-  
+
   const cl = document.documentElement.classList;
   const dataAttr = document.documentElement.dataset.theme;
 
@@ -159,7 +161,7 @@ const clientThemeCode = String.raw`
       cl.add(theme);
     }
   }
-  
+
   const meta = document.querySelector('meta[name=color-scheme]');
   if (meta) {
     if (theme === 'dark') {
