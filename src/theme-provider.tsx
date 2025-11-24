@@ -202,7 +202,7 @@ export function PreventFlashOnWrongTheme({
           // the script "defer". That doesn't work for us because we need
           // this script to run synchronously before the rest of the document
           // is finished loading.
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: safe script
           dangerouslySetInnerHTML={{ __html: clientThemeCode }}
           nonce={nonce}
           suppressHydrationWarning

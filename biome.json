@@ -6,13 +6,17 @@
     "lineWidth": 100,
     "formatWithErrors": true
   },
-  "organizeImports": {
-    "enabled": true
-  },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
     }
   },
   "javascript": {
