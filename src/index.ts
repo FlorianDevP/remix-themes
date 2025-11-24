@@ -12,3 +12,4 @@ export {
   createThemeSessionResolver,
   ThemeSessionResolver,
 } from "./theme-server";
+export { useClientTheme } from "./useClientTheme";
