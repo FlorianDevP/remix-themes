@@ -9,6 +9,7 @@ import {
 } from "react";
 import { useFetcher } from "react-router";
 import { Theme } from "./theme";
+import script from "./theme-script.iife?raw";
 import { useBroadcastChannel } from "./useBroadcastChannel";
 import { useCorrectCssTransition } from "./useCorrectCssTransition";
 
@@ -175,11 +176,13 @@ const clientThemeCode = String.raw`
 
 type PreventFlashOnWrongThemeProps = {
   ssrTheme: boolean;
+  cookieName?: string;
   nonce?: string;
 };
 
 export function PreventFlashOnWrongTheme({
   ssrTheme,
+  cookieName,
   nonce,
 }: PreventFlashOnWrongThemeProps) {
   const [theme] = useTheme();
@@ -205,7 +208,8 @@ export function PreventFlashOnWrongTheme({
           // this script to run synchronously before the rest of the document
           // is finished loading.
           // biome-ignore lint/security/noDangerouslySetInnerHtml: safe script
-          dangerouslySetInnerHTML={{ __html: clientThemeCode }}
+          dangerouslySetInnerHTML={{ __html: script }}
+          data-cookie-name={cookieName}
           nonce={nonce}
           suppressHydrationWarning
         />

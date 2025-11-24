@@ -21,7 +21,6 @@ const theme =
 const cl = document.documentElement.classList;
 const dataAttr = document.documentElement.dataset.theme;
 
-console.log(dataAttr);
 if (typeof dataAttr === "string") {
   const themeAlreadyApplied = dataAttr === "light" || dataAttr === "dark";
   if (!themeAlreadyApplied) {

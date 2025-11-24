@@ -16,9 +16,9 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import { ThemeSwitcher } from "./components/theme-switcher";
 import { unsafeCookie } from "./cookie";
 import { themeSessionResolver } from "./sessions.server";
-import { ThemeSwitcher } from "./components/theme-switcher";
 
 export const links: Route.LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -45,8 +45,11 @@ function LayoutWithoutProvider({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <PreventFlashOnWrongTheme
+          ssrTheme={ssrTheme}
+          cookieName={unsafeCookie.name}
+        />
         <Meta />
-        <PreventFlashOnWrongTheme ssrTheme={ssrTheme} />
         <Links />
       </head>
       <body>
