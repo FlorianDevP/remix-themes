@@ -27,32 +27,39 @@ $ yarn add remix-themes
 
 ## Getting Started
 
-### Create your session storage and create a themeSessionResolver
+### Create your unsecured cookie, session storage and create a themeSessionResolver
+
+```ts
+// cookie.ts
+
+import { createCookie } from "react-router";
+
+export const unsafeCookie = createCookie("__remix-themes", {
+  // domain: 'remix.run',
+  path: "/",
+  sameSite: "lax",
+  secrets: ["s3cr3t"],
+  // can't be httpOnly or secure
+});
+```
 
 ```ts
 // sessions.server.tsx
 
-import { createThemeSessionResolver } from "remix-themes";
 import { createCookieSessionStorage } from "react-router";
+import { createThemeSessionResolver } from "remix-themes";
+import { unsafeCookie } from "./cookie";
 
-const sessionStorage = createCookieSessionStorage({
-  cookie: {
-    name: "__remix-themes",
-    // domain: 'remix.run',
-    path: "/",
-    httpOnly: true,
-    sameSite: "lax",
-    secrets: ["s3cr3t"],
-    // secure: true,
-  },
-});
-
-export const themeSessionResolver = createThemeSessionResolver(sessionStorage);
+export const themeSessionResolver = createThemeSessionResolver(
+  createCookieSessionStorage({
+    cookie: unsafeCookie,
+  }),
+);
 ```
 
-Note: make sure you have `domain` and `secure` parameters set only for your
+Note: make sure you have the `domain` parameter set only for your
 production environment. Otherwise, Safari won't store the cookie if you set
-these parameters on localhost.
+this parameter on localhost.
 
 ### Setup Remix Themes
 
@@ -60,10 +67,19 @@ these parameters on localhost.
 // root.tsx
 
 import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useRouteLoaderData,
+} from "react-router";
+import {
   ThemeProvider,
   useTheme,
   PreventFlashOnWrongTheme,
 } from "remix-themes";
+import { unsafeCookie } from "./cookie";
 import { themeSessionResolver } from "./sessions.server";
 
 // Return the theme from the session storage using the loader
@@ -74,40 +90,57 @@ export const loader: LoaderFunction = async ({ request }) => {
   };
 };
 
-// Wrap your app with ThemeProvider.
-// `specifiedTheme` is the stored theme in the session storage.
-// `themeAction` is the action name that's used to change the theme in the session storage.
-export default function AppWithProviders() {
-  const data = useLoaderData();
-  return (
-    <ThemeProvider specifiedTheme={data.theme} themeAction="/action/set-theme">
-      <App />
-    </ThemeProvider>
-  );
-}
-
-// Use the theme in your app.
+// Use the theme in your Layout.
 // If the theme is missing in session storage, PreventFlashOnWrongTheme will get
 // the browser theme before hydration and will prevent a flash in browser.
 // The client code runs conditionally, it won't be rendered if we have a theme in session storage.
-function App() {
-  const data = useLoaderData();
+function LayoutWithoutProvider({
+  children,
+  ssrTheme,
+}: {
+  children: React.ReactNode;
+  ssrTheme: boolean;
+}) {
   const [theme] = useTheme();
+
   return (
-    <html lang="en" data-theme={theme ?? ""}>
+    <html lang="en" data-theme={theme ?? ""} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <PreventFlashOnWrongTheme
+          ssrTheme={ssrTheme}
+          cookieName={unsafeCookie.name}
+        />
         <Meta />
-        <PreventFlashOnWrongTheme ssrTheme={Boolean(data.theme)} />
         <Links />
       </head>
       <body>
-        <Outlet />
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
+  );
+}
+
+// Wrap your Layout with ThemeProvider.
+// `specifiedTheme` is the stored theme in the session storage.
+// `themeAction` is the action name that's used to change the theme in the session storage.
+export function Layout({ children }: { children: React.ReactNode }) {
+  const data = useRouteLoaderData<typeof loader>("root");
+  const theme = useClientTheme(unsafeCookie.name, data?.theme);
+
+  return (
+    <ThemeProvider
+      specifiedTheme={theme}
+      themeAction="/action/set-theme"
+      disableTransitionOnThemeChange={true}
+    >
+      <LayoutWithoutProvider ssrTheme={Boolean(data?.theme)}>
+        {children}
+      </LayoutWithoutProvider>
+    </ThemeProvider>
   );
 }
 ```
@@ -157,6 +190,14 @@ useTheme takes no parameters but returns:
 - `metadata`: An object which contains the following properties:
   - `definedBy`: The theme source. It can be `USER` or `SYSTEM`. Useful to
     detect if the theme was set by the user or by the system.
+
+### useClientTheme
+
+Gets the theme on the client from the cookie if it was not available on the server.
+
+- `cookieName`: Name of the cookie used store the theme.
+- `data`: Theme value you get from your loader.
+  Undefined if the loader failed to get the theme or was not called.
 
 ### createThemeSessionResolver
 
