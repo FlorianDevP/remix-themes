@@ -33,7 +33,10 @@ export default function Index() {
           </select>
         </label>
       </div>
-      <a href="/about">About</a>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <a href="/about">About</a>
+        <a href="/broken-route">Broken Route</a>
+      </div>
     </div>
   );
 }
