@@ -7,10 +7,10 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useBroadcastChannel } from "./useBroadcastChannel";
-import { useCorrectCssTransition } from "./useCorrectCssTransition";
 import { useFetcher } from "react-router";
 import { Theme } from "./theme";
+import { useBroadcastChannel } from "./useBroadcastChannel";
+import { useCorrectCssTransition } from "./useCorrectCssTransition";
 
 export const themes: Array<Theme> = Object.values(Theme);
 

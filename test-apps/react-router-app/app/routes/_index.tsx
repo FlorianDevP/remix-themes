@@ -1,5 +1,5 @@
-import { Theme, useTheme } from "remix-themes";
 import { useEffect } from "react";
+import { Theme, useTheme } from "remix-themes";
 
 export default function Index() {
   const [theme, setTheme, { definedBy }] = useTheme();

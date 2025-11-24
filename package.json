@@ -46,7 +46,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean --external=react",
     "build:script": "tsup",
-    "format": "biome format . --write && prettier -w \"**/*\" \"!**/*.{md,mdx}\" --ignore-unknown --cache",
+    "format": "biome check --linter-enabled=false --write && prettier -w \"**/*\" \"!**/*.{md,mdx}\" --ignore-unknown --cache",
     "lint": "biome lint .",
     "test": "vitest run",
     "app:dev": "npm run dev -w test-apps/react-router-app",

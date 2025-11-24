@@ -1,12 +1,12 @@
-import { vi } from "vitest";
 import { act, render, renderHook, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
+import { Theme } from "./theme";
 import {
+  mediaQuery,
   PreventFlashOnWrongTheme,
   ThemeProvider,
-  mediaQuery,
   useTheme,
 } from "./theme-provider";
-import { Theme } from "./theme";
 
 function createFetchResponse<T>(data: T) {
   return { json: () => new Promise((resolve) => resolve(data)) };

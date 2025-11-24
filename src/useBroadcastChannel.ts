@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from "react";
 import type { RefObject } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export function useBroadcastChannel<T = string>(
   channelName: string,

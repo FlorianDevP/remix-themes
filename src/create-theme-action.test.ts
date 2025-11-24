@@ -1,7 +1,7 @@
 import { createCookieSessionStorage } from "react-router";
 import { createThemeAction } from "./create-theme-action";
-import { createThemeSessionResolver } from "./theme-server";
 import { themes } from "./theme-provider";
+import { createThemeSessionResolver } from "./theme-server";
 
 function createThemedRequest(theme: string) {
   return new Request("https://remix.themes", {

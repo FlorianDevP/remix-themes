@@ -1,7 +1,6 @@
-import { Theme } from "./theme";
 import { assert, describe, expect, test, vi } from "vitest";
-
 import { decodeValue, getThemeCookie, parseHeader } from "./cookie-parser";
+import { Theme } from "./theme";
 
 // these values
 const value = { theme: "light" };
